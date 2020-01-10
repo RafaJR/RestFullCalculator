@@ -5,6 +5,8 @@ import com.iteriam.calculator.validation.DoubleValueAsStringConstraint;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.util.StringUtils;
+
 import com.iteriam.calculator.validation.AccuracyValueAsStringConstraint;
 
 import lombok.AllArgsConstructor;
@@ -52,6 +54,7 @@ public class InputOperators {
 
 	this.operator1 = operator1.replace(COMMA, DOT).replace(POSSITIVE, BLANK);
 	this.operator2 = operator2.replace(COMMA, DOT).replace(POSSITIVE, BLANK);
+	this.accuracy = StringUtils.isEmpty(accuracy) ? "-1" : this.accuracy;
     }
 
     /**
