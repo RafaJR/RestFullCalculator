@@ -31,8 +31,8 @@ import lombok.ToString;
 @ToString
 public class InputOperators {
     
-    @Autowired
-    private CaculatorTracer tracer;
+//    @Autowired
+//    private CaculatorTracer tracer;
 
     private static final String COMMA = ",";
     private static final String DOT = ".";
