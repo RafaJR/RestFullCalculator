@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.iteriam.calculator.constants.CaculatorTracer;
 import com.iteriam.calculator.model.InputOperators;
 import com.iteriam.calculator.service.ICalculatorService;
 //import io.corp.calculator.*;
@@ -29,7 +30,8 @@ import io.corp.calculator.TracerImpl;
 @RequestMapping("/calculator")
 public class SimpleCalculatorController {
     
-    private static final TracerImpl tracer =  new TracerImpl();
+    @Autowired
+    private CaculatorTracer tracer;
     
     @Autowired
     private ICalculatorService calculatorService;
@@ -41,10 +43,12 @@ public class SimpleCalculatorController {
      */
     @GetMapping("")
     @ResponseStatus(HttpStatus.OK)
-    // Input parametres validated by custom annotations in Input Operators.
+    // Input parametres validated by 'javax.validation' custom annotations in Input Operators.
     public ResponseEntity<?> executeArithmeticOperation(@RequestBody @NotNull @Valid InputOperators inputOperators) {
 	
-	tracer.trace("Request recibed for arithmetic operation with parameters: " + inputOperators.toString());
+	tracer.trace(String.format(CaculatorTracer.REQUEST, inputOperators.toString()));
+	
+	inputOperators.postFormat();
 	
 	return new ResponseEntity<String>(
 		calculatorService.executeArithmeticOperation(inputOperators) ,

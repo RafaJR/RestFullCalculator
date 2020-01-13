@@ -20,9 +20,9 @@ public class CalculatorServiceImpl implements ICalculatorService {
 
     @Autowired
     // Operable number conversion mapper
-    OperatorsMapper operatorsMapper;
+    private OperatorsMapper operatorsMapper;
     @Autowired
-    CaculatorTracer caculatorTracer;
+    private CaculatorTracer caculatorTracer;
 
     @Override
     /**
@@ -33,7 +33,7 @@ public class CalculatorServiceImpl implements ICalculatorService {
     public String executeArithmeticOperation(InputOperators inputOperators) {
 
 	// Ensure that the input operators are convertible to operable numbers.
-	inputOperators.setDecimalSeparator();
+//	inputOperators.setDecimalSeparator();
 	String result = CalculatorConstants.BLANK;
 
 	// The 'BigDecimal' object only will be used if input parameters are really so
@@ -41,12 +41,14 @@ public class CalculatorServiceImpl implements ICalculatorService {
 	if (inputOperators.isDoubleOperable()) {
 	    // Conversion to 'double' operators
 	    DoubleOperators doubleOperators = operatorsMapper.toDoubleMapper(inputOperators);
+	    caculatorTracer.trace(CaculatorTracer.DOUBLE_OPERATORS_OPERATION);
 	    // Arithmetic operations method for 'double' parameters
 	    result = executeArithmeticOperation(doubleOperators);
 
 	} else {
 	    // Conversion to 'BigInteger' operators
 	    BigDecimalOperators bigDecimalOperators = operatorsMapper.toBigDecimalMapper(inputOperators);
+	    caculatorTracer.trace(CaculatorTracer.DOUBLE_OPERATORS_OPERATION);
 	    // Arithmetic operations method for 'BigInteger' parameters
 	    result = executeArithmeticOperation(bigDecimalOperators);
 	}
@@ -77,7 +79,8 @@ public class CalculatorServiceImpl implements ICalculatorService {
 	    result = this.division(doubleOperators.getOperator1(), doubleOperators.getOperator2());
 	    break;
 	default:
-	    result = "Lost operation.";
+	    caculatorTracer.trace(CaculatorTracer.NOT_OPERATION_FOUND);
+	    result = CaculatorTracer.NOT_OPERATION_FOUND;
 	    break;
 
 	}
@@ -109,7 +112,8 @@ public class CalculatorServiceImpl implements ICalculatorService {
 	    result = this.division(bigDecimalOperators.getOperator1(), bigDecimalOperators.getOperator2());
 	    break;
 	default:
-	    result = "Lost operation.";
+	    caculatorTracer.trace(CaculatorTracer.NOT_OPERATION_FOUND);
+	    result = CaculatorTracer.NOT_OPERATION_FOUND;
 	    break;
 	}
 
@@ -124,6 +128,9 @@ public class CalculatorServiceImpl implements ICalculatorService {
      */
     private String addition(double operator1, double operator2) {
 
+	caculatorTracer.trace(
+		String.format(CaculatorTracer.DOUBLE_ADDITION, String.valueOf(operator1), String.valueOf(operator2)));
+
 	return String.valueOf(Double.sum(operator1, operator2));
 
     }
@@ -134,18 +141,22 @@ public class CalculatorServiceImpl implements ICalculatorService {
      * @return The 'BigDecimal' parameters sum as String
      */
     private String addition(BigDecimal operator1, BigDecimal operator2) {
-	
+
+	caculatorTracer.trace(String.format(CaculatorTracer.BIG_DECIMAL_ADDITION, operator1.toEngineeringString(),
+		operator2.toEngineeringString()));
+
 	String result = CalculatorConstants.BLANK;
-	
+
 	try {
-	    
+
 	    result = operator1.add(operator2, CalculatorConstants.MATH_CONTEXT).toEngineeringString();
-	    
-	}catch(ArithmeticException e) {
-	    
-	    caculatorTracer.trace(String.format(CaculatorTracer.ADDITION_ARITHMETIC_EXCEPTION , operator1.toString(), operator2.toString()));
+
+	} catch (ArithmeticException e) {
+
+	    caculatorTracer.trace(String.format(CaculatorTracer.ADDITION_ARITHMETIC_EXCEPTION, operator1.toString(),
+		    operator2.toString()));
 	    caculatorTracer.trace(e.getMessage());
-	    
+
 	}
 
 	return result;
@@ -159,6 +170,9 @@ public class CalculatorServiceImpl implements ICalculatorService {
      */
     private String subtraction(double operator1, double operator2) {
 
+	caculatorTracer.trace(String.format(CaculatorTracer.DOUBLE_SUBTRACTION, String.valueOf(operator1),
+		String.valueOf(operator2)));
+
 	return String.valueOf(operator1 - operator2);
 
     }
@@ -169,20 +183,24 @@ public class CalculatorServiceImpl implements ICalculatorService {
      * @return The 'BigDecimal' parameters subtraction as String
      */
     private String subtraction(BigDecimal operator1, BigDecimal operator2) {
-	
+
+	caculatorTracer.trace(String.format(CaculatorTracer.BIG_DECIMAL_SUBTRACTION, operator1.toEngineeringString(),
+		operator2.toEngineeringString()));
+
 	String result = CalculatorConstants.BLANK;
-	
+
 	try {
-	    
+
 	    result = operator1.subtract(operator2, CalculatorConstants.MATH_CONTEXT).toEngineeringString();
-	    
-	}catch(ArithmeticException e) {
-	    
-	    caculatorTracer.trace(String.format(CaculatorTracer.SUBTRACTION_ARITHMETIC_EXCEPTION , operator1.toString(), operator2.toString()));
+
+	} catch (ArithmeticException e) {
+
+	    caculatorTracer.trace(String.format(CaculatorTracer.SUBTRACTION_ARITHMETIC_EXCEPTION, operator1.toString(),
+		    operator2.toString()));
 	    caculatorTracer.trace(e.getMessage());
-	    
+
 	}
-	
+
 	return result;
 
     }
@@ -194,6 +212,9 @@ public class CalculatorServiceImpl implements ICalculatorService {
      */
     private String multiplication(double operator1, double operator2) {
 
+	caculatorTracer.trace(String.format(CaculatorTracer.DOUBLE_MULTIPLICATION, String.valueOf(operator1),
+		String.valueOf(operator2)));
+
 	return String.valueOf(operator1 * operator2);
 
     }
@@ -204,20 +225,24 @@ public class CalculatorServiceImpl implements ICalculatorService {
      * @return The 'BigDecimal' parameters multiplication as String
      */
     private String multiplication(BigDecimal operator1, BigDecimal operator2) {
-	
+
+	caculatorTracer.trace(String.format(CaculatorTracer.BIG_DECIMAL_MULTIPLICATION, operator1.toEngineeringString(),
+		operator2.toEngineeringString()));
+
 	String result = CalculatorConstants.BLANK;
-	
+
 	try {
-	    
+
 	    result = operator1.multiply(operator2, CalculatorConstants.MATH_CONTEXT).toEngineeringString();
-	    
-	}catch(ArithmeticException e) {
-	    
-	    caculatorTracer.trace(String.format(CaculatorTracer.MULTIPLICATION_ARITHMETIC_EXCEPTION, operator1, operator2));
+
+	} catch (ArithmeticException e) {
+
+	    caculatorTracer
+		    .trace(String.format(CaculatorTracer.MULTIPLICATION_ARITHMETIC_EXCEPTION, operator1, operator2));
 	    caculatorTracer.trace(e.getMessage());
-	    
+
 	}
-	
+
 	return result;
 
     }
@@ -229,6 +254,9 @@ public class CalculatorServiceImpl implements ICalculatorService {
      */
     private String division(double operator1, double operator2) {
 
+	caculatorTracer.trace(
+		String.format(CaculatorTracer.DOUBLE_DIVISION, String.valueOf(operator1), String.valueOf(operator2)));
+
 	return operator2 != 0 ? String.valueOf(operator1 / operator2) : CalculatorConstants.ILLEGAL_OPERATION;
 
     }
@@ -239,20 +267,25 @@ public class CalculatorServiceImpl implements ICalculatorService {
      * @return The 'BigDecimal' parameters division as String
      */
     private String division(BigDecimal operator1, BigDecimal operator2) {
-	
+
+	caculatorTracer.trace(String.format(CaculatorTracer.BIG_DECIMAL_DIVISION, operator1.toEngineeringString(),
+		operator2.toEngineeringString()));
+
 	String result = CalculatorConstants.BLANK;
-	
+
 	try {
-	    
-	    result = operator2.compareTo(new BigDecimal(0)) != 0 ? operator1.divide(operator2, CalculatorConstants.ROUDING_MODE).toEngineeringString() : CalculatorConstants.ILLEGAL_OPERATION;
-	    
-	}catch(ArithmeticException e) {
-	    
+
+	    result = operator2.compareTo(new BigDecimal(0)) != 0
+		    ? operator1.divide(operator2, CalculatorConstants.ROUDING_MODE).toEngineeringString()
+		    : CalculatorConstants.ILLEGAL_OPERATION;
+
+	} catch (ArithmeticException e) {
+
 	    caculatorTracer.trace(String.format(CaculatorTracer.DIVIDE_ARITHMETIC_EXCEPTION, operator1, operator2));
 	    caculatorTracer.trace(e.getMessage());
-	    
+
 	}
-	
+
 	return result;
 
     }

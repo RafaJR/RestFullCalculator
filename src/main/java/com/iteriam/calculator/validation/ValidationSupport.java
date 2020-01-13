@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-@Component
 public class ValidationSupport {
 
     // Regular expression to check the 'integer convertible format' of a String

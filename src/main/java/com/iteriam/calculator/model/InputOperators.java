@@ -5,8 +5,11 @@ import com.iteriam.calculator.validation.DoubleValueAsStringConstraint;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.iteriam.calculator.constants.CaculatorTracer;
 import com.iteriam.calculator.validation.AccuracyValueAsStringConstraint;
 
 import lombok.AllArgsConstructor;
@@ -27,6 +30,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class InputOperators {
+    
+    @Autowired
+    private CaculatorTracer tracer;
 
     private static final String COMMA = ",";
     private static final String DOT = ".";
@@ -50,7 +56,9 @@ public class InputOperators {
      * inmedatly after construction for number conversion.
      */
     @PostConstruct
-    public void setDecimalSeparator() {
+    public void postFormat() {
+	
+//	tracer.trace(CaculatorTracer.POST_FORMAT);
 
 	this.operator1 = operator1.replace(COMMA, DOT).replace(POSSITIVE, BLANK);
 	this.operator2 = operator2.replace(COMMA, DOT).replace(POSSITIVE, BLANK);
@@ -72,6 +80,8 @@ public class InputOperators {
      *         'double' primitives.
      */
     private boolean isDoubleOperable(String op) {
+	
+//	tracer.trace(String.format(CaculatorTracer.DOUBLE_OPERATOR_CHECK, op));
 
 	int doubleMax = String.valueOf(Double.MAX_VALUE).getBytes().length;
 	int doubleMin = String.valueOf(Double.MIN_VALUE).getBytes().length;

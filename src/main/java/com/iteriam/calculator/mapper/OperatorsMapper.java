@@ -2,8 +2,10 @@ package com.iteriam.calculator.mapper;
 
 import java.math.BigDecimal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.iteriam.calculator.constants.CaculatorTracer;
 import com.iteriam.calculator.model.InputOperators;
 import com.iteriam.calculator.model.calculation.BigDecimalOperators;
 import com.iteriam.calculator.model.calculation.DoubleOperators;
@@ -17,6 +19,9 @@ import com.iteriam.calculator.model.calculation.DoubleOperators;
 
 @Component("OperatorsMapper")
 public class OperatorsMapper {
+    
+    @Autowired
+    private CaculatorTracer tracer;
 
     /**
      * @param inputOperators
@@ -27,7 +32,7 @@ public class OperatorsMapper {
      */
     public DoubleOperators toDoubleMapper(InputOperators inputOperators) throws NumberFormatException {
 	
-	inputOperators.setDecimalSeparator();
+	tracer.trace(String.format(CaculatorTracer.MAP_TO_DOUBLE, inputOperators.toString()));
 	
 	return new DoubleOperators(Double.valueOf(inputOperators.getOperator1()),
 		Double.valueOf(inputOperators.getOperator2()), Long.valueOf(inputOperators.getAccuracy()),
@@ -44,7 +49,7 @@ public class OperatorsMapper {
      */
     public BigDecimalOperators toBigDecimalMapper(InputOperators inputOperators) throws NumberFormatException {
 	
-	inputOperators.setDecimalSeparator();
+	tracer.trace(String.format(CaculatorTracer.MAP_TO_BIG_DECIMAL, inputOperators.toString()));
 	
 	return new BigDecimalOperators(new BigDecimal(inputOperators.getOperator1()),
 		new BigDecimal(inputOperators.getOperator2()), Long.valueOf(inputOperators.getAccuracy()),
