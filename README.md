@@ -1,2 +1,2 @@
 # RestFullCalculator
-Splie API for arithmetic calculations
+Simple API for arithmetic calculations
