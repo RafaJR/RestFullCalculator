@@ -32,8 +32,6 @@ public class OperatorsMapper {
      */
     public DoubleOperators toDoubleMapper(InputOperators inputOperators) throws NumberFormatException {
 	
-	System.out.println("");
-	
 	tracer.trace(String.format(CaculatorTracer.MAP_TO_DOUBLE, inputOperators.toString()));
 	
 	return new DoubleOperators(Double.valueOf(inputOperators.getOperator1()),

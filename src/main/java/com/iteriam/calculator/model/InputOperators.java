@@ -89,6 +89,18 @@ public class InputOperators {
 	
 	return (!op.startsWith(NEGATIVE) && opereratorLenght <= doubleMax)
 		|| (op.startsWith(NEGATIVE) && opereratorLenght <= doubleMin);
+	
+//	try {
+//	    
+//	    double d = Double.valueOf(op);
+//	    
+//	}catch(NumberFormatException e) {
+//	    return false;
+//	}catch(Exception e) {
+//	    return false;
+//	}
+//	
+//	return true;
     }
 
 }

@@ -18,8 +18,6 @@ import com.iteriam.calculator.model.InputOperators;
 import com.iteriam.calculator.service.ICalculatorService;
 //import io.corp.calculator.*;
 
-import io.corp.calculator.TracerImpl;
-
 /**
  * @author Rafael Jiménez Reina 
  * @email rafael.jimenez.reina@gmail.com
@@ -28,7 +26,7 @@ import io.corp.calculator.TracerImpl;
 @RestController
 @Validated
 @RequestMapping("/calculator")
-public class SimpleCalculatorController {
+public class CalculatorController {
     
     @Autowired
     private CaculatorTracer tracer;
